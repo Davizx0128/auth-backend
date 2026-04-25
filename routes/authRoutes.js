@@ -1,3 +1,4 @@
+const auth = require('../middleware/auth');
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -58,6 +59,10 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: 'Erro no servidor' });
   }
+});
+router.get('/profile', auth, async (req, res) => {
+  const user = await User.findById(req.user.id).select('-password');
+  res.json(user);
 });
 
 module.exports = router;
